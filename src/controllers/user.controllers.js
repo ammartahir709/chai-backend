@@ -12,9 +12,10 @@ const generateAccessAndRefreshTokens = async(userId) => {
         const user = await User.findById(userId)
         
         const accessToken = user.generateAccessToken()
-        console.log(accessToken)
+        //console.log(accessToken)
+
         const refreshToken = user.generateRefreshToken()
-        console.log(refreshToken)
+        //console.log(refreshToken)
         
 
         user.refreshToken = refreshToken
@@ -54,7 +55,7 @@ const registerUser = asyncHandler(async (req, res) =>
             throw new ApiError(409, "User with email or username already exists")
         }
 
-        console.log("beyond existing user")
+        //console.log("beyond existing user")
 
         const avatarLocalPath = req.files?.avatar[0]?.path;
      //   const coverImageLocalPath = req.files?.coverImage[0]?.path;
@@ -72,7 +73,8 @@ const registerUser = asyncHandler(async (req, res) =>
 
         
         const avatar = await uploadOnCloudinary(avatarLocalPath)
-        console.log(avatar)
+       // console.log(avatar)
+
         const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
         if (!avatar){
