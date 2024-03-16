@@ -33,7 +33,17 @@ const generateAccessAndRefreshTokens = async(userId) => {
 
 const registerUser = asyncHandler(async (req, res) => 
     {
-        
+        // get user details from frontend
+        // validation - not empty
+        // check if user already exists - username, email
+        // check for images - avatar, cover image
+        // upload them to cloudinary
+        // create user object
+        // create entry in db
+        // remove password and refreshtoken fields from response
+        // check for user creation
+        // send response
+
         const {fullName, email, username, password} = req.body
 
       //  if (fullName === ""){
@@ -155,14 +165,7 @@ const loginUser = asyncHandler(async (req, res) => {
         .status(200)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
-        .json(
-            200,
-            {
-                user: loggedInUser, accessToken, refreshToken
-            },
-
-            "User logged in successfully!"
-        )
+        .json(new ApiResponse(200, {user: loggedInUser, accessToken, refreshToken}, "User logged in successfully!"))
 
 })
 
@@ -171,8 +174,8 @@ const logoutUser = asyncHandler(async (req,res) => {
 
     User.findByIdAndUpdate(req.user._id,
         {
-            $set: {
-                refreshToken: undefined
+            $unset: {
+                refreshToken: 1
             },     
         },
 
@@ -271,7 +274,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     try {
         return res
             .status(200)
-            .json(200, req.user, "current user fetched successfully")
+            .json(new ApiResponse(200, req.user, "current user fetched successfully"))
 
     } catch (error) {
         throw new ApiError(500, "problem at get current user method")
@@ -493,7 +496,8 @@ const getWatchHistory = asyncHandler(async (req, res) => {
             new ApiResponse(
                 200,
                 user[0].watchHistory,
-                "Watch history fetched successfully")
+                "Watch history fetched successfully"
+            )
         )
 })
 
@@ -505,6 +509,7 @@ export {
     refreshAccessToken,
     changeCurrentPassword,
     getCurrentUser,
+    updateAccountDetails,
     updateUserAvatar,
     updateUserCoverImage,
     getUserChannelProfile,
